@@ -1,1 +1,1 @@
-# 3d-daussian-splatting-samples
+# 3d-Gaussian-splatting-samples
