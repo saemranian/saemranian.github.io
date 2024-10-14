@@ -35,9 +35,9 @@
     const mode = parseInt(urlParams.get('mode')) || 0;
 
     const viewer = new GaussianSplats3D.Viewer({
-        'cameraUp': [0, -1, -.17],
-        'initialCameraPosition': [-5, -1, -1],
-        'initialCameraLookAt': [-1.72477, 0.05395, -0.00147],
+        'cameraUp': [0, -1, 0],
+        'initialCameraPosition': [-25, -1, -1],
+        'initialCameraLookAt': [0, 0, 0],
         'sphericalHarmonicsDegree': 2
     });
     let path = 'assets/data/Humvee_06_300ks_Sel01.ksplat';
