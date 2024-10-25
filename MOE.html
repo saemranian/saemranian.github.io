@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>3D Gaussian Splat Demo - Truck</title>
+  <title>3D Gaussian Splat Demo - MOE</title>
   <script type="text/javascript" src="js/util.js"></script>
   <script type="importmap">
     {
@@ -40,10 +40,10 @@
     });
     
     // Adjust camera FOV to 58 degrees after viewer creation
-    viewer.camera.fov = 58; // Set FOV to 58 degrees
+    viewer.camera.fov = 104; // Set FOV to 58 degrees
     viewer.camera.updateProjectionMatrix(); // Update projection matrix for FOV change
 
-    let path = 'assets/data/Humvee_06_300ks_Sel01.ksplat';
+    let path = 'assets/data/MOE_natRes_300ks_3MS_20alpha_2SH.ksplat';
     viewer.addSplatScene(path, {
       'progressiveLoad': false
     })
