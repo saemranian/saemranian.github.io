@@ -16,13 +16,11 @@
     }
   </script>
   <style>
-
     body {
       background-color: #000000;
       height: 100vh;
       margin: 0px;
     }
-
   </style>
 
 </head>
@@ -40,6 +38,11 @@
         'initialCameraLookAt': [0, 0, 0],
         'sphericalHarmonicsDegree': 2
     });
+    
+    // Adjust camera FOV to 104 degrees after viewer creation
+    viewer.camera.fov = 104; // Set FOV to 104 degrees
+    viewer.camera.updateProjectionMatrix(); // Update projection matrix for FOV change
+
     let path = 'assets/data/Humvee_06_300ks_Sel01.ksplat';
     viewer.addSplatScene(path, {
       'progressiveLoad': false
