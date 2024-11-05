@@ -32,8 +32,13 @@
 				<!-- Thumbnail -->
 					<section id="thumbnails">
 						<article>
-							<a class="thumbnail" href="images/fulls/Benz_01.jpg" data-position="left center" onclick="openInNewTab('https://example1.com'); return false;">
-								<img src="images/thumbs/01.jpg" alt="" />
+							<!-- Thumbnail for the lightbox view -->
+							<a class="thumbnail" href="images/fulls/01.jpg" data-position="left center">
+								<img src="images/thumbs/01.jpg" alt="Thumbnail" />
+							</a>
+							<!-- Main image link that opens in a new tab -->
+							<a href="#" onclick="openInNewTab('https://example1.com'); return false;">
+								<img src="images/fulls/Bus_01.jpg" alt="Main Image" />
 							</a>
 							<h2>Diam tempus accumsan</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
