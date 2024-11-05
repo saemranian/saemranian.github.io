@@ -31,16 +31,14 @@
 
 				<!-- Thumbnail -->
 					<section id="thumbnails">
-						<article class="thumbnail-container" onclick="openInNewTab('https://example1.com')">
-							<!-- Thumbnail image set as a background in CSS -->
-							<div class="thumbnail" style="background-image: url('images/thumbs/01.jpg');"></div>
-
-							<!-- Main image is the clickable one -->
-							<a href="#" onclick="return false;">
-								<img src="images/fulls/01.jpg" alt="Main Image" class="main-image" />
-							</a>
+						<article>
+							<a class="thumbnail" href="images/fulls/Bus_01.jpg" data-position="left center"><img src="images/thumbs/01.jpg" alt="" /></a>
 							<h2>Diam tempus accumsan</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+							<!-- New link wrapping the image -->
+							<a href="https://example.com/link1" target="_blank">
+								<img src="images/fulls/Benz_01.jpg" alt=""/>
+							</a>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/02.jpg"><img src="images/thumbs/02.jpg" alt="" /></a>
@@ -113,38 +111,6 @@
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/main.js"></script>
-		<!-- Add the new function here -->
-		<script>
-			function openInNewTab(url) {
-				window.open(url, '_blank');
-			}
-		</script>
-
-		<!-- CSS Styles -->
-		<style>
-			.thumbnail-container {
-				position: relative;
-				cursor: pointer;
-			}
-
-		/* Background thumbnail styling */
-		.thumbnail {
-			background-size: cover;
-			background-position: center;
-			width: 100%;
-			height: 200px; /* Set as per your requirement */
-		}
-
-		/* Main image styling */
-		.main-image {
-			display: block;
-			width: 100%;
-			opacity: 0; /* Make it invisible but clickable */
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-		</style>
 
 	</body>
 </html>
