@@ -34,13 +34,13 @@
 
     const viewer = new GaussianSplats3D.Viewer({
         'cameraUp': [0, -1, 0],
-        'initialCameraPosition': [21, -2, 2],
-        'initialCameraLookAt': [-0.5, -5.5, 4.7],
+        'initialCameraPosition': [4, -14, 5],
+        'initialCameraLookAt': [2.5, -8.5, 4.7],
         'sphericalHarmonicsDegree': 2
     });
     
     // Adjust camera FOV to 58 degrees after viewer creation
-    viewer.camera.fov = 104; // Set FOV to 58 degrees
+    viewer.camera.fov = 84; // Set FOV to 58 degrees
     viewer.camera.updateProjectionMatrix(); // Update projection matrix for FOV change
 
     let path = 'assets/data/Mercedes_int_02_natRes_331ks_Sel01.ksplat';
