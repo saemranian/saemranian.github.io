@@ -32,8 +32,8 @@
 				<!-- Thumbnail -->
 					<section id="thumbnails">
 						<article>
-							<a class="thumbnail" href="https://saemranian.vercel.app/MOE.html" target="_blank" data-position="left center">
-								<img src="images/fulls/Benz_01.jpg" alt="" />
+							<a class="thumbnail" href="images/fulls/Bus_01.jpg" data-position="left center" onclick="openInNewTab('https://saemranian.vercel.app/MOE.html'); return false;">
+								<img src="images/fulls/Bus_01.jpg" alt="" />
 							</a>
 							<h2>Diam tempus accumsan</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -118,6 +118,11 @@
 			<script src="assets/js/browser.min.js"></script>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/main.js"></script>
+		<script>
+			function openInNewTab(url) {
+				window.open(url, '_blank');
+				}
+		</script>
 
 	</body>
 </html>
