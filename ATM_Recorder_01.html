@@ -34,13 +34,13 @@
 
     const viewer = new GaussianSplats3D.Viewer({
         'cameraUp': [0, -1, 0],
-        'initialCameraPosition': [21, -2, 2],
-        'initialCameraLookAt': [-0.5, -5.5, 4.7],
+        'initialCameraPosition': [19, -8.36, -15.81],
+        'initialCameraLookAt': [8.4, -2.6, -6.35],
         'sphericalHarmonicsDegree': 2
     });
     
     // Adjust camera FOV to 58 degrees after viewer creation
-    viewer.camera.fov = 104; // Set FOV to 58 degrees
+    viewer.camera.fov = 94; // Set FOV to 58 degrees
     viewer.camera.updateProjectionMatrix(); // Update projection matrix for FOV change
 
     let path = 'assets/data/ATM Recorder 02 Basic 221ks Sel 01.ksplat';
