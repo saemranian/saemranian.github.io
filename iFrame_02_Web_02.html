@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3DGS Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-container a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            text-align: center;
+        }
+
+        .gallery-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .gallery-container img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>3DGS Gallery</h1>
+    <div class="gallery-container">
+        <a href="https://superspl.at/s?id=2e933aeb" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+1" alt="3DGS Scene 1">
+        </a>
+        <a href="https://superspl.at/s?id=771bd2b1" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+2" alt="3DGS Scene 2">
+        </a>
+        <a href="https://superspl.at/s?id=4ae34a63" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+3" alt="3DGS Scene 3">
+        </a>
+        <a href="https://superspl.at/s?id=e267f33a" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+4" alt="3DGS Scene 4">
+        </a>
+        <a href="https://superspl.at/s?id=656993bb" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+5" alt="3DGS Scene 5">
+        </a>
+        <a href="https://superspl.at/s?id=16009592" target="_blank">
+            <img src="https://via.placeholder.com/400?text=3DGS+Scene+6" alt="3DGS Scene 6">
+        </a>
+    </div>
+</body>
+</html>
