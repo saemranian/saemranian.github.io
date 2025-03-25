@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>3D Gaussian Splat Demo - ATM Recorder</title>
+  
+  <!-- CORS Fix -->
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+
   <script type="text/javascript" src="js/util.js"></script>
   <script type="importmap">
     {
@@ -21,74 +25,62 @@
       height: 100vh;
       margin: 0px;
     }
-
-    .annotation-label {
-      position: absolute;
-      color: white;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 4px 8px;
-      font-size: 14px;
-      border-radius: 4px;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      display: none;
-    }
   </style>
 </head>
 
 <body>
-  <div id="annotation" class="annotation-label">ATM Machine</div>
-
   <script type="module">
     import * as THREE from 'three';
     import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
 
-    // Initialize 3DGS viewer
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = parseInt(urlParams.get('mode')) || 0;
+
     const viewer = new GaussianSplats3D.Viewer({
-      'cameraUp': [0, -1, 0],
-      'initialCameraPosition': [19, -8.36, -15.81],
-      'initialCameraLookAt': [8.4, -2.6, -6.35],
-      'sphericalHarmonicsDegree': 2
+        'cameraUp': [0, -1, 0],
+        'initialCameraPosition': [19, -8.36, -15.81],
+        'initialCameraLookAt': [8.4, -2.6, -6.35],
+        'sphericalHarmonicsDegree': 2
     });
 
-    viewer.camera.fov = 94;
-    viewer.camera.updateProjectionMatrix();
+    // Adjust camera FOV
+    viewer.camera.fov = 94; 
+    viewer.camera.updateProjectionMatrix(); 
 
     let path = 'assets/data/ATM Recorder 02 Basic 221ks Sel 01.ksplat';
-    viewer.addSplatScene(path, { 'progressiveLoad': false }).then(() => {
-      viewer.start();
-      addAnnotation();
+    
+    viewer.addSplatScene(path, {
+      'progressiveLoad': false
+    }).then(() => {
+        viewer.start();
+        addAnnotation();  // Ensure annotation is added only after viewer starts
     });
 
-    // Function to add annotation
     function addAnnotation() {
-      const scene = viewer.scene;
-      const annotationPos = new THREE.Vector3(5, -3, -5);
+        const scene = viewer.scene;  // Ensure we are using the correct scene from the viewer
+        if (!scene) {
+            console.error("Scene is not available.");
+            return;
+        }
 
-      // Create a red circle sprite as the marker
-      const spriteMaterial = new THREE.SpriteMaterial({ color: 0xff0000 });
-      const annotationSprite = new THREE.Sprite(spriteMaterial);
-      annotationSprite.scale.set(0.5, 0.5, 1);
-      annotationSprite.position.copy(annotationPos);
-      scene.add(annotationSprite);
+        // Create annotation text
+        const annotationText = "Annotation Here!";
+        const textGeometry = new THREE.TextGeometry(annotationText, {
+            font: new THREE.FontLoader().parse({
+                "type": "Font",
+                "data": "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
+            }),
+            size: 1,
+            height: 0.1
+        });
 
-      // HTML label
-      const annotationLabel = document.getElementById('annotation');
-
-      // Update label position
-      function updateAnnotation() {
-        const projected = annotationPos.clone().project(viewer.camera);
-        const x = (projected.x * 0.5 + 0.5) * window.innerWidth;
-        const y = (-projected.y * 0.5 + 0.5) * window.innerHeight;
-
-        annotationLabel.style.left = `${x}px`;
-        annotationLabel.style.top = `${y}px`;
-        annotationLabel.style.display = projected.z < 1 ? 'block' : 'none';
-      }
-
-      viewer.renderer.setAnimationLoop(updateAnnotation);
+        const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        
+        // Position the annotation
+        textMesh.position.set(10, 0, 0);  // Adjust position
+        scene.add(textMesh);
     }
   </script>
 </body>
-
 </html>
