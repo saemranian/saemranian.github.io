@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Annotation Test</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/jsm/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/jsm/loaders/FontLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/jsm/geometries/TextGeometry.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/geometries/TextGeometry.js"></script>
     <style>
         body { margin: 0; background-color: black; overflow: hidden; }
         canvas { display: block; }
@@ -22,7 +22,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Camera controls
+        // Camera controls (now using correct constructor)
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // Smooth movement
         controls.dampingFactor = 0.05;
