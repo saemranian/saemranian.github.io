@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>3D Gaussian Splat Demo - ATM Recorder</title>
-  
-  <!-- CORS Fix -->
+
+  <!-- Fix for CORS issues -->
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
   <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
 
@@ -36,6 +36,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const mode = parseInt(urlParams.get('mode')) || 0;
 
+    // Initialize the Gaussian Splat Viewer
     const viewer = new GaussianSplats3D.Viewer({
         'cameraUp': [0, -1, 0],
         'initialCameraPosition': [19, -8.36, -15.81],
@@ -43,7 +44,7 @@
         'sphericalHarmonicsDegree': 2
     });
 
-    // Adjust camera FOV
+    // Adjust camera settings
     viewer.camera.fov = 94; 
     viewer.camera.updateProjectionMatrix(); 
 
@@ -53,33 +54,38 @@
       'progressiveLoad': false
     }).then(() => {
         viewer.start();
-        addAnnotation();  // Ensure annotation is added only after viewer starts
+
+        // Make sure annotations are added only when the viewer scene is ready
+        setTimeout(() => {
+          addAnnotation();
+        }, 2000);
     });
 
     function addAnnotation() {
-        const scene = viewer.scene;  // Ensure we are using the correct scene from the viewer
-        if (!scene) {
-            console.error("Scene is not available.");
+        // Ensure the scene is ready before adding objects
+        if (!viewer.scene) {
+            console.error("Scene is not available yet.");
             return;
         }
 
-        // Create annotation text
-        const annotationText = "Annotation Here!";
-        const textGeometry = new THREE.TextGeometry(annotationText, {
-            font: new THREE.FontLoader().parse({
-                "type": "Font",
-                "data": "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json"
-            }),
-            size: 1,
-            height: 0.1
-        });
+        const scene = viewer.scene;
 
-        const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        
-        // Position the annotation
-        textMesh.position.set(10, 0, 0);  // Adjust position
-        scene.add(textMesh);
+        // Create annotation text
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            const textGeometry = new THREE.TextGeometry("Annotation Here!", {
+                font: font,
+                size: 1,
+                height: 0.1
+            });
+
+            const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+            // Set position
+            textMesh.position.set(10, 0, 0);
+            scene.add(textMesh);
+        });
     }
   </script>
 </body>
