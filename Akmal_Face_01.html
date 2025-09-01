@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Akmal Face 3D Gaussian Splat Demo</title>
-  <script type="text/javascript" src="js/util.js"></script>
+  
+  <!-- Add your friend's local library paths here -->
   <script type="importmap">
     {
         "imports": {
@@ -15,22 +16,121 @@
         }
     }
   </script>
+
   <style>
     body {
       background-color: #000000;
       height: 100vh;
       margin: 0px;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .controls {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+    }
+    #annotation-modal {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.75);
+        border-radius: 12px;
+        padding: 25px;
+        max-width: 450px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+        z-index: 20;
+        backdrop-filter: blur(10px);
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    #annotation-modal h2 {
+        margin-top: 0;
+        font-size: 1.5em;
+        color: #fff;
+    }
+    #annotation-modal p {
+        margin-bottom: 20px;
+        font-size: 1em;
+        line-height: 1.4;
+        color: #ccc;
+    }
+    #annotation-modal img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+    }
+    .close-button:hover {
+        transform: scale(1.1) rotate(90deg);
+    }
+    .creator-mode-active {
+        color: #ffc107;
+        font-weight: bold;
     }
   </style>
 
 </head>
 
 <body>
+  <div class="controls">
+      Mode: <span id="mode-status">Viewer</span>
+  </div>
+  
+  <div id="annotation-modal">
+      <button class="close-button">&times;</button>
+      <h2 id="modal-title"></h2>
+      <img id="modal-image" src="" alt="Annotation Image">
+      <p id="modal-description"></p>
+  </div>
+
   <script type="module">
     import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
+    import * as THREE from 'three';
 
     const urlParams = new URLSearchParams(window.location.search);
     const mode = parseInt(urlParams.get('mode')) || 0;
+
+    // Hotspot data
+    const hotspotData = [
+        {
+            position: { x: 0.8, y: 0.5, z: 8.6 },
+            name: "Front View",
+            description: "A close-up view of the subject's face.",
+            imageUrl: "https://placehold.co/400x250/3498db/ffffff?text=Close-up"
+        },
+        {
+            position: { x: -5, y: -2, z: 12 },
+            name: "Left Profile",
+            description: "View from the left side, highlighting the profile.",
+            imageUrl: "https://placehold.co/400x250/2ecc71/ffffff?text=Left+Profile"
+        },
+        {
+            position: { x: 5, y: -2, z: 12 },
+            name: "Right Profile",
+            description: "View from the right side, highlighting the profile.",
+            imageUrl: "https://placehold.co/400x250/e74c3c/ffffff?text=Right+Profile"
+        }
+    ];
 
     const viewer = new GaussianSplats3D.Viewer({
         'cameraUp': [0, -1, 0],
@@ -39,17 +139,110 @@
         'sphericalHarmonicsDegree': 2
     });
     
-    // Adjust camera FOV to 58 degrees after viewer creation
-    viewer.camera.fov = 54; // Set FOV to 58 degrees
-    viewer.camera.updateProjectionMatrix(); // Update projection matrix for FOV change
+    // Adjust camera FOV to 54 degrees after viewer creation
+    viewer.camera.fov = 54;
+    viewer.camera.updateProjectionMatrix();
 
+    // Hotspot and Interaction Logic
+    let isCreatorMode = false;
+    const modeStatus = document.getElementById('mode-status');
+    const annotationModal = document.getElementById('annotation-modal');
+    const closeModalButton = document.querySelector('.close-button');
+    const hotspots = [];
+
+    // Function to create a hotspot in the scene
+    function createHotspot(data) {
+        const hotspotGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const hotspotMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, transparent: true, opacity: 0.7 });
+        const hotspot = new THREE.Mesh(hotspotGeometry, hotspotMaterial);
+        
+        // Use the same position, adjusting the y-coordinate slightly if needed for visibility
+        hotspot.position.set(data.position.x, data.position.y, data.position.z);
+        hotspot.userData = data;
+        viewer.scene.add(hotspot);
+        hotspots.push(hotspot);
+    }
+
+    // Populate initial hotspots
+    hotspotData.forEach(createHotspot);
+
+    // Load the 3D Gaussian Splat model
     let path = 'assets/data/Akmal_natRes_01_573ks_Sel.ksplat';
     viewer.addSplatScene(path, {
       'progressiveLoad': false
     })
     .then(() => {
         viewer.start();
+        // Set up the click listener for the viewer canvas
+        viewer.canvas.addEventListener('click', (event) => {
+            const rect = viewer.canvas.getBoundingClientRect();
+            const mouse = new THREE.Vector2(
+                ((event.clientX - rect.left) / rect.width) * 2 - 1,
+                -((event.clientY - rect.top) / rect.height) * 2 + 1
+            );
+
+            if (isCreatorMode) {
+                // Raycast against the splat scene to find the intersection point
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, viewer.camera);
+                const intersects = raycaster.intersectObject(viewer.splatScene.splatMesh);
+                
+                if (intersects.length > 0) {
+                    const point = intersects[0].point;
+                    const newSpot = {
+                        position: { x: point.x, y: point.y, z: point.z },
+                        name: "New Spot",
+                        description: "A manually created hotspot.",
+                        imageUrl: "https://placehold.co/400x250/ffffff/000000?text=New+Point"
+                    };
+                    createHotspot(newSpot);
+                    console.log(`New hotspot created at: { x: ${newSpot.position.x.toFixed(2)}, y: ${newSpot.position.y.toFixed(2)}, z: ${newSpot.position.z.toFixed(2)} }`);
+                }
+            } else {
+                // Raycast against the hotspots to see if one was clicked
+                const raycaster = new THREE.Raycaster();
+                raycaster.setFromCamera(mouse, viewer.camera);
+                const intersects = raycaster.intersectObjects(hotspots);
+
+                if (intersects.length > 0) {
+                    const hotspot = intersects[0].object;
+                    const data = hotspot.userData;
+
+                    // Animate camera to the hotspot
+                    viewer.flyTo(hotspot.position, viewer.initialCameraLookAt, 1500, () => {
+                         // Show the annotation modal after the animation is complete
+                        document.getElementById('modal-title').innerText = data.name;
+                        document.getElementById('modal-image').src = data.imageUrl;
+                        document.getElementById('modal-description').innerText = data.description;
+                        annotationModal.style.display = 'block';
+                    });
+                } else {
+                    // If no hotspot is clicked, close the modal
+                    annotationModal.style.display = 'none';
+                }
+            }
+        });
     });
+
+    // Close modal on button click
+    closeModalButton.addEventListener('click', () => {
+        annotationModal.style.display = 'none';
+    });
+
+    // Toggle Creator Mode with 'C' key
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'c' || event.key === 'C') {
+            isCreatorMode = !isCreatorMode;
+            if (isCreatorMode) {
+                modeStatus.innerText = "Creator";
+                modeStatus.classList.add('creator-mode-active');
+            } else {
+                modeStatus.innerText = "Viewer";
+                modeStatus.classList.remove('creator-mode-active');
+            }
+        }
+    });
+
   </script>
 </body>
 
