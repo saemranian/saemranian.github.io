@@ -152,14 +152,14 @@
 
     // Function to create a hotspot in the scene
     function createHotspot(data) {
-        const hotspotGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        // Increased the size of the spheres to make them more visible
+        const hotspotGeometry = new THREE.SphereGeometry(2.0, 16, 16);
         const hotspotMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, transparent: true, opacity: 0.7 });
         const hotspot = new THREE.Mesh(hotspotGeometry, hotspotMaterial);
         
         // Use the same position, adjusting the y-coordinate slightly if needed for visibility
         hotspot.position.set(data.position.x, data.position.y, data.position.z);
         hotspot.userData = data;
-        // IMPORTANT: Add the hotspot to the viewer's main scene, not the splat scene
         viewer.scene.add(hotspot);
         hotspots.push(hotspot);
     }
