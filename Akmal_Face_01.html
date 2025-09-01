@@ -149,6 +149,14 @@
     const annotationModal = document.getElementById('annotation-modal');
     const closeModalButton = document.querySelector('.close-button');
     const hotspots = [];
+    const fixedLookAt = new THREE.Vector3(0.8, 0.5, 8.6);
+
+    // Camera movement limits
+    const cameraLimits = {
+      minX: -40, maxX: 40,
+      minY: -20, maxY: 20,
+      minZ: -40, maxZ: 40
+    };
 
     // Function to create a hotspot in the scene
     function createHotspot(data) {
@@ -210,7 +218,7 @@
                     const data = hotspot.userData;
 
                     // Animate camera to the hotspot
-                    viewer.flyTo(hotspot.position, viewer.initialCameraLookAt, 1500, () => {
+                    viewer.flyTo(hotspot.position, fixedLookAt, 1500, () => {
                          // Show the annotation modal after the animation is complete
                         document.getElementById('modal-title').innerText = data.name;
                         document.getElementById('modal-image').src = data.imageUrl;
@@ -223,6 +231,18 @@
                 }
             }
         });
+
+        // Set up an animation loop to enforce camera limits
+        viewer.addEventListener('update', () => {
+            const cameraPosition = viewer.camera.position;
+            cameraPosition.x = Math.max(cameraLimits.minX, Math.min(cameraLimits.maxX, cameraPosition.x));
+            cameraPosition.y = Math.max(cameraLimits.minY, Math.min(cameraLimits.maxY, cameraPosition.y));
+            cameraPosition.z = Math.max(cameraLimits.minZ, Math.min(cameraLimits.maxZ, cameraPosition.z));
+
+            // Fix camera lookAt point
+            viewer.controls.target.copy(fixedLookAt);
+        });
+
     });
 
     // Close modal on button click
