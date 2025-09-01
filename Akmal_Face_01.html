@@ -159,6 +159,7 @@
         // Use the same position, adjusting the y-coordinate slightly if needed for visibility
         hotspot.position.set(data.position.x, data.position.y, data.position.z);
         hotspot.userData = data;
+        // IMPORTANT: Add the hotspot to the viewer's main scene, not the splat scene
         viewer.scene.add(hotspot);
         hotspots.push(hotspot);
     }
