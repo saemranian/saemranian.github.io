@@ -155,7 +155,9 @@
     const cameraLimits = {
       minX: -40, maxX: 40,
       minY: -20, maxY: 20,
-      minZ: -40, maxZ: 40
+      minZ: -40, maxZ: 40,
+      minDistance: 5,
+      maxDistance: 40
     };
 
     // Function to create a hotspot in the scene
@@ -168,6 +170,8 @@
         // Use the same position, adjusting the y-coordinate slightly if needed for visibility
         hotspot.position.set(data.position.x, data.position.y, data.position.z);
         hotspot.userData = data;
+        
+        // FIX: Add the hotspot to the correct scene
         viewer.scene.add(hotspot);
         hotspots.push(hotspot);
     }
@@ -241,6 +245,15 @@
 
             // Fix camera lookAt point
             viewer.controls.target.copy(fixedLookAt);
+            
+            // Limit camera zoom distance
+            const distance = viewer.camera.position.distanceTo(viewer.controls.target);
+            if (distance < cameraLimits.minDistance) {
+                viewer.camera.position.sub(viewer.controls.target).setLength(cameraLimits.minDistance).add(viewer.controls.target);
+            }
+            if (distance > cameraLimits.maxDistance) {
+                viewer.camera.position.sub(viewer.controls.target).setLength(cameraLimits.maxDistance).add(viewer.controls.target);
+            }
         });
 
     });
