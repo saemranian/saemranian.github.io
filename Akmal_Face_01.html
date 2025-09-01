@@ -163,9 +163,6 @@
         hotspots.push(hotspot);
     }
 
-    // Populate initial hotspots
-    hotspotData.forEach(createHotspot);
-
     // Load the 3D Gaussian Splat model
     let path = 'assets/data/Akmal_natRes_01_573ks_Sel.ksplat';
     viewer.addSplatScene(path, {
@@ -173,7 +170,10 @@
     })
     .then(() => {
         viewer.start();
-        // Set up the click listener for the viewer canvas
+        // Populate initial hotspots AFTER the model has loaded
+        hotspotData.forEach(createHotspot);
+
+        // Set up the click listener for the viewer canvas AFTER the model has loaded
         viewer.canvas.addEventListener('click', (event) => {
             const rect = viewer.canvas.getBoundingClientRect();
             const mouse = new THREE.Vector2(
