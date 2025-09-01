@@ -162,17 +162,15 @@
 
     // Function to create a hotspot in the scene
     function createHotspot(data) {
-        // Increased the size of the spheres to make them more visible
         const hotspotGeometry = new THREE.SphereGeometry(2.0, 16, 16);
         const hotspotMaterial = new THREE.MeshBasicMaterial({ color: 0xffa500, transparent: true, opacity: 0.7 });
         const hotspot = new THREE.Mesh(hotspotGeometry, hotspotMaterial);
         
-        // Use the same position, adjusting the y-coordinate slightly if needed for visibility
         hotspot.position.set(data.position.x, data.position.y, data.position.z);
         hotspot.userData = data;
         
-        // FIX: Add the hotspot to the correct scene
-        viewer.scene.add(hotspot);
+        // FIX: Add the hotspot to the splatScene's mesh
+        viewer.splatScene.add(hotspot);
         hotspots.push(hotspot);
     }
 
@@ -235,7 +233,7 @@
                 }
             }
         });
-
+        
         // Set up an animation loop to enforce camera limits
         viewer.addEventListener('update', () => {
             const cameraPosition = viewer.camera.position;
@@ -247,13 +245,9 @@
             viewer.controls.target.copy(fixedLookAt);
             
             // Limit camera zoom distance
-            const distance = viewer.camera.position.distanceTo(viewer.controls.target);
-            if (distance < cameraLimits.minDistance) {
-                viewer.camera.position.sub(viewer.controls.target).setLength(cameraLimits.minDistance).add(viewer.controls.target);
-            }
-            if (distance > cameraLimits.maxDistance) {
-                viewer.camera.position.sub(viewer.controls.target).setLength(cameraLimits.maxDistance).add(viewer.controls.target);
-            }
+            viewer.controls.minDistance = cameraLimits.minDistance;
+            viewer.controls.maxDistance = cameraLimits.maxDistance;
+
         });
 
     });
